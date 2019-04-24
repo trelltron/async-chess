@@ -1,0 +1,76 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0px;
+}
+
+.app-root {
+
+}
+
+.app-wrapper {
+
+}
+
+.app-placeholder {
+
+}
+
+.auth-modal {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    background-color: rgba(0,0,0, 0.5);
+}
+
+.auth-modal-inner {
+    position: absolute;
+    left: 25%;
+    right: 25%;
+    top: 25%;
+    bottom: 25%;
+    margin: auto;
+    background: white;
+}
+
+@media only screen and (max-width: 768px) {
+    .auth-modal-inner {
+        left: 5%;
+        right: 5%;
+        top: 5%;
+        bottom: 5%;
+    }
+}
+
+.auth-modal-text {
+    text-align: center;
+    margin-top: 10%;
+    margin-bottom: 10%;
+}
+
+.auth-modal-content {
+    text-align: center;
+    margin-top: 10%;
+    margin-bottom: 10%;
+}
+
+.navbar {
+    height: 40px;
+    background-color: saddlebrown;
+    width: 100%;
+}
+
+.logout-button {
+    float: right;
+    height: 100%;
+    color: white;
+    background-color: saddlebrown;
+    border-color: burlywood;
+}
