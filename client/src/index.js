@@ -87,8 +87,10 @@ class AuthModal extends Component {
     return (
       <div className= 'auth-modal'>
         <div className= 'auth-modal-inner'>
-          <div className='auth-modal-text'>
-            { this.state.error ? this.state.error : 'Please Sign in. ' }
+          <div className='auth-modal-top-panel'>
+            <div className='auth-modal-text'>
+              { this.state.error ? this.state.error : 'Please Sign in. ' }
+            </div>
           </div>
           <div className='auth-modal-content'>
             { this.state.token ?
@@ -97,14 +99,16 @@ class AuthModal extends Component {
                 tokenInvalid={this.tokenInvalid}
                 loginSuccess={this.props.loginSuccess}
               /> :
-              <GoogleLogin
-                clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
-                buttonText="Login"
-                responseType="id_token"
-                onSuccess={(data) => this.attemptLogin(data)}
-                onFailure={(data) => console.log(data)}
-                cookiePolicy={'single_host_origin'}
-              />
+              <div className='auth-modal-button-wrapper'>
+                <GoogleLogin
+                  clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
+                  buttonText="Login"
+                  responseType="id_token"
+                  onSuccess={(data) => this.attemptLogin(data)}
+                  onFailure={(data) => console.log(data)}
+                  cookiePolicy={'single_host_origin'}
+                />
+              </div>
             }
           </div>
         </div>

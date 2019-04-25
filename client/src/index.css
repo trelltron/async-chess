@@ -44,21 +44,38 @@ body {
     .auth-modal-inner {
         left: 5%;
         right: 5%;
+    }
+}
+
+@media only screen and (max-height: 768px) {
+    .auth-modal-inner {
         top: 5%;
         bottom: 5%;
     }
 }
 
+.auth-modal-top-panel {
+    position: relative;
+    height: 50%;
+}
+
 .auth-modal-text {
-    text-align: center;
-    margin-top: 10%;
-    margin-bottom: 10%;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .auth-modal-content {
-    text-align: center;
-    margin-top: 10%;
-    margin-bottom: 10%;
+    position: relative;
+    height: 50%;
+}
+
+.auth-modal-button-wrapper {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 .navbar {
