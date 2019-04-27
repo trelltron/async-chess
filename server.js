@@ -94,6 +94,7 @@ app.post('/api/signup', (req, res) => {
     res.status(400).json();
     return;
   }
+  console.log('verifying token')
   verifyToken(req.body.token).then((payload) => {
     const google_id = payload['sub'];
     // TODO: Replace this very dirty way to achieve get-or-create within a single transaction with something better
@@ -101,14 +102,17 @@ app.post('/api/signup', (req, res) => {
         VALUES ($1::text, $2::text)
         ON CONFLICT (google_id) DO UPDATE
         SET nickname = EXCLUDED.nickname
-        RETURNING (uid, nickname)`, [google_id, req.body.nickname], (err, result) => {
+        RETURNING uid, nickname`, [google_id, req.body.nickname], (err, result) => {
       if (err) {
         throw err;
       }
-
+      console.log('done query');
       console.log(result);
       if (result.rows.length === 1) {
+        console.log('got 1 row');
         req.session.user_uid = result.rows[0].uid
+        console.log('set session user_uid')
+        console.log(result.rows[0].uid)
         res.status(201).json({ nickname: result.rows[0].nickname });
       } else {
         // Probably shouldn't be possible?
