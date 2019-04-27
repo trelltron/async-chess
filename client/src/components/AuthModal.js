@@ -19,7 +19,7 @@ class SignupForm extends React.Component {
   }
 
   async handleSubmit() {
-    const response = await fetch('/api/signup', {
+    const response = await fetch('/api/v1/auth/signup', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -69,7 +69,7 @@ class AuthModal extends React.Component {
   }
 
   fetchUserData() {
-    fetch('/api/me').then((response) => {
+    fetch('/api/v1/auth/me').then((response) => {
       console.log(response);
       if (response.status === 200) {
         response.json().then((user) => {
@@ -83,7 +83,7 @@ class AuthModal extends React.Component {
 
   async attemptLogin(data) {
     console.log(data);
-    const response = await fetch('/api/login', {
+    const response = await fetch('/api/v1/auth/login', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

@@ -1,7 +1,7 @@
 import React from 'react';
 
 const logout = () =>  {
-  fetch('/api/logout', {method: 'POST'}).then((response) => {
+  fetch('/api/v1/auth/logout', {method: 'POST'}).then((response) => {
     console.log(response);
     window.location.reload()
   });
