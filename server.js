@@ -24,3 +24,5 @@ app.use(session({
 app.use('/api/v1/auth', authRouter)
 
 app.listen(port, () => console.log(`Listening on port ${port}`));
+
+module.exports = app;

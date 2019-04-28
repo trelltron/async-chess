@@ -12,9 +12,9 @@ async function verifyToken(token) {
 }
 
 // Get the user for this session if one exists
-routes.get('/me', (req, res) => {
+const get_me = (req, res) => {
   if (!req.session.user_uid) {
-    res.status(404).json();
+    res.status(404).end();
     return;
   } 
 
@@ -26,13 +26,13 @@ routes.get('/me', (req, res) => {
       res.status(200).json(result.rows[0]);
     } else {
       // DB should enforce uniqueness on uid field, so this means no user
-      res.status(404).json();
+      res.status(404).end();
     }
   });
-});
+};
 
 // Take google id token, authenticate, check if signed up, return user info if exists, else returns error
-routes.post('/login', (req, res) => {
+const post_login = (req, res) => {
   if (!req.body.token) {
     res.status(400).json({ 'error': 'Login requires a google auth token' });
     return;
@@ -57,10 +57,10 @@ routes.post('/login', (req, res) => {
     console.log(error)
     res.status(400).json({ 'error': 'Token invalid' })
   });
-});
+};
 
 // Take google id token and user details, create user object
-routes.post('/signup', (req, res) => {
+const post_signup = (req, res) => {
   console.log(req.body);
   if (!req.body.token || !req.body.nickname) {
     res.status(400).json();
@@ -85,14 +85,19 @@ routes.post('/signup', (req, res) => {
     console.log(error)
     res.status(403).json({ error })
   });
-});
+};
 
 // delete session
-routes.post('/logout', (req, res) => {
+const post_logout = (req, res) => {
   req.session.destroy(function(err) {
     console.log(err);
     res.status(200).json({ error: err });
   })
-});
+};
+
+routes.get('/me', get_me);
+routes.post('/login', post_login);
+routes.post('/signup', post_signup);
+routes.post('/logout', post_logout);
 
 module.exports = routes;
