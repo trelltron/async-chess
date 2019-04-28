@@ -1,11 +1,11 @@
-const pool = require('./config').pool;
+const query = require('./query');
 
 const GET_BY_UID_QUERY = `
   SELECT nickname FROM users WHERE uid = $1::uuid
 `
 
 function get_by_uid(uid, callback) {
-  pool.query(GET_BY_UID_QUERY, [uid], callback);
+  query(GET_BY_UID_QUERY, [uid], callback);
 }
 
 const GET_BY_GOOGLE_ID_QUERY = `
@@ -13,7 +13,7 @@ const GET_BY_GOOGLE_ID_QUERY = `
 `
 
 function get_by_google_id(google_id, callback) {
-  pool.query(GET_BY_GOOGLE_ID_QUERY, [google_id], callback);
+  query(GET_BY_GOOGLE_ID_QUERY, [google_id], callback);
 }
 
 // TODO: Replace this very dirty way to achieve get-or-create within a single transaction with something better
@@ -31,7 +31,7 @@ const GET_OR_CREATE_QUERY = `
 `
 
 function get_or_create(google_id, nickname, callback) {
-  pool.query(GET_OR_CREATE_QUERY, [google_id, nickname], callback);
+  query(GET_OR_CREATE_QUERY, [google_id, nickname], callback);
 }
 
 module.exports = {

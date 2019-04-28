@@ -5,7 +5,10 @@
     "client": "cd client && npm run start",
     "server": "nodemon server.js",
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
-    "test": "mocha"
+    "test": "mocha",
+    "dbsetup":"node db/manage/setup.js",
+    "dbclear": "node db/manage/clear.js",
+    "dbreset": "npm run dbclear && npm run dbsetup"
   },
   "dependencies": {
     "body-parser": "^1.18.3",
