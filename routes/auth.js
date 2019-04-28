@@ -54,7 +54,6 @@ const post_login = (req, res) => {
       }
     });
   }).catch((error) => {
-    console.log(error)
     res.status(400).json({ 'error': 'Token invalid' })
   });
 };
@@ -90,7 +89,9 @@ const post_signup = (req, res) => {
 // delete session
 const post_logout = (req, res) => {
   req.session.destroy(function(err) {
-    console.log(err);
+    if (err) {
+      console.log(err);
+    }
     res.status(200).json({ error: err });
   })
 };

@@ -4,7 +4,7 @@ const bodyParser = require('body-parser');
 
 const uuid = require('uuid/v4')
 
-const { authRouter } = require('./api')
+const { authRouter } = require('./routes')
 
 require('dotenv').config();
 
@@ -23,6 +23,6 @@ app.use(session({
 
 app.use('/api/v1/auth', authRouter)
 
-app.listen(port, () => console.log(`Listening on port ${port}`));
+if (!module.parent) app.listen(port, () => console.log(`Listening on port ${port}`));
 
 module.exports = app;

@@ -1,129 +1,126 @@
 require('chai').should();
-const rewire = require('rewire');
 
-const make_request_mock = (user_uid) => ({
-  session: {
-    user_uid
+const session = require('supertest-session');
+const mockery = require('mockery');
+
+var server;
+
+mockeryConfig = {
+  warnOnReplace: false,
+  warnOnUnregistered: false,
+  useCleanCache: true
+};
+
+const makeDatabaseMock = () => ({
+  users: {
+    get_by_google_id: function(google_id, callback) {
+      callback(null, this._get_by_google_id_result);
+    },
+    _get_by_google_id_result: { rows: [] },
+    get_by_uid: function(uid, callback) {
+      callback(null, this._get_by_uid_result);
+    },
+    _get_by_uid_result: { rows: [] }
   }
-})
-const make_response_mock = () => ({
-  status: function(input) {
-    this._called_status.push(input);
-    return this;
-  },
-  _called_status: [],
-  end: function() {
-    this._called_end += 1;
-  },
-  _called_end: 0,
-  json: function(arg) {
-    this._called_json.push(arg);
-  },
-  _called_json: []
 });
 
+const makeMockAuthLib = (payload, expectedToken) => ({
+  OAuth2Client: function() {
+    this.verifyIdToken = async (input) => {
+      if (expectedToken) {
+        input.idToken.should.equal(expectedToken);
+      }
+      return {
+        getPayload: () => payload
+      }
+    };
+  }
+});
+
+mockeryConfig = {
+  warnOnReplace: false,
+  warnOnUnregistered: false,
+  useCleanCache: true
+};
+
 describe('API /api/v1/auth', function() {
-  describe('GET /me', function() {
-    it('should return 404 when user_id not in session', function() {
-      const api_auth = rewire('../api/auth');
-      const get_me = api_auth.__get__('get_me');
-      let req = make_request_mock(null)
-      let res = make_response_mock();
-      get_me(req, res);
-      res._called_status.should.have.lengthOf(1);
-      res._called_status[0].should.equal(404);
-      res._called_end.should.equal(1);
+  describe('POST /login', function() {
+    afterEach(function(){
+      mockery.deregisterAll();
+      mockery.disable();
     });
 
-    it('should return 404 when user not found in DB', function() {
-      const api_auth = rewire('../api/auth');
-      const mock_db = {
-        users: {
-          get_by_uid: function(uid, callback) {
-            callback(null, { rows: []})
-          }
-        }
-      }
-      api_auth.__set__('db', mock_db)
-      let req = make_request_mock('dummy_user_id');
-      let res = make_response_mock();
-      const get_me = api_auth.__get__('get_me');
-      get_me(req, res);
-      res._called_status.should.have.lengthOf(1);
-      res._called_status[0].should.equal(404);
-      res._called_end.should.equal(1);
+    it('should return 400 when token not sent', function(done) {
+      mockery.registerMock('../db', {});
+      mockery.registerMock('google-auth-library', makeMockAuthLib({}))
+      mockery.enable(mockeryConfig);
+      server = require('../server');
+      session(server)
+        .post('/api/v1/auth/login')
+        .send({})
+        .expect(400, done)
     });
 
-    it('should return user if valid ID found in session', function() {
-      const api_auth = rewire('../api/auth');
-      const mock_db = {
-        users: {
-          get_by_uid: function(uid, callback) {
-            callback(null, { rows: [{ nickname: 'tester' }]})
-          }
-        }
-      }
-      api_auth.__set__('db', mock_db)
-      let req = make_request_mock('dummy_user_id');
-      let res = make_response_mock();
-      const get_me = api_auth.__get__('get_me');
-      get_me(req, res);
-      res._called_status.should.have.lengthOf(1);
-      res._called_status[0].should.equal(200);
-      res._called_json.should.have.lengthOf(1);
-      res._called_json[0].should.have.all.keys('nickname');
+    it('should return 400 when token invalid', function(done) {
+      mockery.registerMock('../db', {});
+      mockery.enable(mockeryConfig);
+      server = require('../server');
+      session(server)
+        .post('/api/v1/auth/login')
+        .send({ token: 'testToken' })
+        .expect(400, done)
+    });
+
+    it('should return 404 when no existing user matches token', function(done) {
+      mockery.registerMock('../db', makeDatabaseMock());
+      mockery.registerMock('google-auth-library', makeMockAuthLib({}))
+      mockery.enable(mockeryConfig);
+      server = require('../server');
+      session(server)
+        .post('/api/v1/auth/login')
+        .send({ token: 'testToken' })
+        .expect(404, done)
+    });
+
+    it('should return 200 when existing user matches token', function(done) {
+      let dbMock = makeDatabaseMock()
+      dbMock.users._get_by_google_id_result.rows = [
+        { nickname: 'test' }
+      ];
+      mockery.registerMock('../db', dbMock);
+      mockery.registerMock('google-auth-library', makeMockAuthLib({}))
+      mockery.enable(mockeryConfig);
+      server = require('../server');
+      session(server)
+        .post('/api/v1/auth/login')
+        .send({ token: 'testToken' })
+        .expect(200, done)
+    });
+
+    it('should have set session on 200 response', function(done) {
+      let dbMock = makeDatabaseMock()
+      dbMock.users._get_by_google_id_result.rows = [
+        { nickname: 'test', uid: 'test-uid' }
+      ];
+      dbMock.users._get_by_uid_result.rows = [
+        { nickname: 'test' }
+      ]
+      mockery.registerMock('../db', dbMock);
+      mockery.registerMock('google-auth-library', makeMockAuthLib({}))
+      mockery.enable(mockeryConfig);
+      server = require('../server');
+      currentSession = session(server);
+      currentSession
+        .post('/api/v1/auth/login')
+        .send({ token: 'testToken' })
+        .expect(200)
+        .end((err, res) => {
+          if (err) return done(err);
+          currentSession
+            .get('/api/v1/auth/me')
+            .expect(200, done)
+        })
     });
   });
 
-  describe('GET /me', function() {
-    it('should return 404 when user_id not in session', function() {
-      const api_auth = rewire('../api/auth');
-      const get_me = api_auth.__get__('get_me');
-      let req = make_request_mock(null)
-      let res = make_response_mock();
-      get_me(req, res);
-      res._called_status.should.have.lengthOf(1);
-      res._called_status[0].should.equal(404);
-      res._called_end.should.equal(1);
-    });
-
-    it('should return 404 when user not found in DB', function() {
-      const api_auth = rewire('../api/auth');
-      const mock_db = {
-        users: {
-          get_by_uid: function(uid, callback) {
-            callback(null, { rows: []})
-          }
-        }
-      }
-      api_auth.__set__('db', mock_db)
-      let req = make_request_mock('dummy_user_id');
-      let res = make_response_mock();
-      const get_me = api_auth.__get__('get_me');
-      get_me(req, res);
-      res._called_status.should.have.lengthOf(1);
-      res._called_status[0].should.equal(404);
-      res._called_end.should.equal(1);
-    });
-
-    it('should return user if valid ID found in session', function() {
-      const api_auth = rewire('../api/auth');
-      const mock_db = {
-        users: {
-          get_by_uid: function(uid, callback) {
-            callback(null, { rows: [{ nickname: 'tester' }]})
-          }
-        }
-      }
-      api_auth.__set__('db', mock_db)
-      let req = make_request_mock('dummy_user_id');
-      let res = make_response_mock();
-      const get_me = api_auth.__get__('get_me');
-      get_me(req, res);
-      res._called_status.should.have.lengthOf(1);
-      res._called_status[0].should.equal(200);
-      res._called_json.should.have.lengthOf(1);
-      res._called_json[0].should.have.all.keys('nickname');
-    });
-  });
 });
