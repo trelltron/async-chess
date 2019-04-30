@@ -4,6 +4,20 @@
 
 body {
     margin: 0px;
+    background-color: #f5ce9f;
+}
+
+button {
+    color: white;
+    background-color: #b8581e;
+    border-color: #f5ce9f;
+    height: 40px;
+    width: 80px;
+}
+
+button:disabled {
+    color: greytext;
+    background-color: buttonface;
 }
 
 .auth-modal {
@@ -92,24 +106,13 @@ body {
 
 .navbar {
     height: 40px;
-    background-color: saddlebrown;
+    background-color: #b8581e;
     width: 100%;
 }
 
 .logout-button {
     float: right;
     height: 100%;
-}
-
-button {
-    color: white;
-    background-color: saddlebrown;
-    border-color: burlywood;
-}
-
-button:disabled {
-    color: greytext;
-    background-color: buttonface;
 }
 
 /* Loading Icon CSS */
@@ -168,6 +171,8 @@ button:disabled {
     text-align: center;
     margin: 10px;
     cursor: pointer;
+    border: #b8581e 4px solid;
+    box-shadow: 5px 5px;
 }
 
 .game-list-tile-header {
@@ -195,11 +200,10 @@ button:disabled {
     height: 100%;
     width: 100%;
     background-color: #f5ce9f;
+    border-collapse: collapse;
+    border: #b8581e 4px solid;
+    box-shadow: 5px 5px;
 }
-
-/* .game-board-row {
-    min-height: 10px;
-} */
 
 .game-board-col {
     height: 12.5%;
@@ -235,9 +239,15 @@ button:disabled {
 	background: #b8581e;
 }
 
+.active-game {
+    text-align: center;
+}
+
 .active-game-board-wrapper {
     height: 500px;
     width: 500px;
+    padding: 10px;
+    display: inline-block;
 }
 
 

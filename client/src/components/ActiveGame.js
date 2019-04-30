@@ -73,6 +73,9 @@ class ActiveGame extends React.Component {
   onUndo() {
     this.setState({ currentMove: null });
   }
+  onBack() {
+    this.props.setActiveGame(null);
+  }
   onDelete() {
     this.props.setLocalGame(null);
     this.props.setActiveGame(null);
@@ -95,6 +98,9 @@ class ActiveGame extends React.Component {
   render() {
     return (
       <div className='active-game'>
+        <div>
+          {this.getStateText()}
+        </div>
         <div className="active-game-board-wrapper">
           <GameBoard 
             allowInput={true} 
@@ -105,13 +111,14 @@ class ActiveGame extends React.Component {
             />
         </div>
         <div className='active-game-controls'>
-          {this.getStateText()}
           <button 
             disabled={!this.state.currentMove}
-            onClick={() => this.onConfirm()}> confirm </button>
+            onClick={() => this.onConfirm()}> Confirm </button>
           <button 
             disabled={!this.state.currentMove}
-            onClick={() => this.onUndo()}> undo </button>
+            onClick={() => this.onUndo()}> Undo </button>
+          <button 
+            onClick={() => this.onBack()}> Back </button>
           <button 
             onClick={() => this.onDelete()}> Delete </button>
         </div>
