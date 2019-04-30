@@ -36,17 +36,21 @@ class ActiveGame extends React.Component {
     }
 
     if (gameState.in_checkmate()) {
-      let winner = gameState.turn();
-      this.setState({ finished: { state: 'checkmate', winner} });
+      let winner = otherSide(gameState.turn());
+      this.setState({ finished: { state: 'checkmate', winner } });
     }
   }
   tileClick(tileID) {
     if (this.state.currentMove) return;
+
     const gameState = generateBoard(this.props.activeGame);
     const tile = gameState.get(tileID);
 
     if (this.state.selected) {
-      let move = {from: this.state.selected, to: tileID};
+      if (this.state.selected === tileID) {
+        return this.setState({ selected: null });
+      }
+      let move = { from: this.state.selected, to: tileID };
       let verified = gameState.move(move);
       if (verified) {
         this.setState({ currentMove: move, selected: null });
@@ -96,6 +100,10 @@ class ActiveGame extends React.Component {
 
   }
   render() {
+    let clickable = (
+      (this.state.finished || this.state.currentMove) ? 
+      'none' : (this.state.selected ? 'all' : 'own')  
+    );
     return (
       <div className='active-game'>
         <div>
@@ -106,20 +114,25 @@ class ActiveGame extends React.Component {
             allowInput={true} 
             state={this.props.activeGame}
             tileClick={(tileID) => this.tileClick(tileID)}
+            clickable={clickable}
             selected={this.state.selected}
             currentMove={this.state.currentMove}
             />
         </div>
         <div className='active-game-controls'>
           <button 
+            className='ac-button' 
             disabled={!this.state.currentMove}
             onClick={() => this.onConfirm()}> Confirm </button>
           <button 
+            className='ac-button'
             disabled={!this.state.currentMove}
             onClick={() => this.onUndo()}> Undo </button>
           <button 
+            className='ac-button'
             onClick={() => this.onBack()}> Back </button>
           <button 
+            className='ac-button'
             onClick={() => this.onDelete()}> Delete </button>
         </div>
       </div>

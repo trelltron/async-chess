@@ -7,7 +7,7 @@ body {
     background-color: #f5ce9f;
 }
 
-button {
+.ac-button {
     color: white;
     background-color: #b8581e;
     border-color: #f5ce9f;
@@ -15,7 +15,7 @@ button {
     width: 80px;
 }
 
-button:disabled {
+.ac-button:disabled {
     color: greytext;
     background-color: buttonface;
 }

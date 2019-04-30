@@ -9,6 +9,6 @@ const logout = () =>  {
 
 export default () => (
   <div className='navbar'> 
-    <button className='logout-button' onClick={logout}> Logout </button> 
+    <button className='ac-button logout-button' onClick={logout}> Logout </button> 
   </div>
 )

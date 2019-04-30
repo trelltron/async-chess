@@ -46,9 +46,10 @@ class GameBoard extends React.Component {
                   const tileID = colCoord + rowCoord;
                   const content = gameState.get(tileID);
                   let css = 'game-board-col';
-                  {/* if (this.props.allowInput && content && content.color === gameState.turn()) {
+                  if (this.props.clickable === 'all' || (
+                      this.props.clickable === 'own' && content && content.color === gameState.turn())) {
                     css = css + ' clickable';
-                  } */}
+                  }
                   if (highlighted.indexOf(tileID) > -1) {
                     css = css + ' selected';
                   }
