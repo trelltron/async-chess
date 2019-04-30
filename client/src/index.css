@@ -99,9 +99,17 @@ body {
 .logout-button {
     float: right;
     height: 100%;
+}
+
+button {
     color: white;
     background-color: saddlebrown;
     border-color: burlywood;
+}
+
+button:disabled {
+    color: greytext;
+    background-color: buttonface;
 }
 
 /* Loading Icon CSS */
@@ -111,8 +119,8 @@ body {
     position: relative;
     width: 64px;
     height: 64px;
-  }
-  .lds-ring div {
+}
+.lds-ring div {
     box-sizing: border-box;
     display: block;
     position: absolute;
@@ -123,22 +131,118 @@ body {
     border-radius: 50%;
     animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
     border-color: #fff transparent transparent transparent;
-  }
-  .lds-ring div:nth-child(1) {
+}
+.lds-ring div:nth-child(1) {
     animation-delay: -0.45s;
-  }
-  .lds-ring div:nth-child(2) {
+}
+.lds-ring div:nth-child(2) {
     animation-delay: -0.3s;
-  }
-  .lds-ring div:nth-child(3) {
+}
+.lds-ring div:nth-child(3) {
     animation-delay: -0.15s;
-  }
-  @keyframes lds-ring {
+}
+@keyframes lds-ring {
     0% {
-      transform: rotate(0deg);
+        transform: rotate(0deg);
     }
     100% {
-      transform: rotate(360deg);
+        transform: rotate(360deg);
     }
-  }
+}
   
+/* body {
+    background-color: darkgray;
+} */
+
+.game-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.game-list-tile {
+    background-color: #f5ce9f;
+    height: 200px;
+    width: 400px;
+    border-radius: 25px;
+    text-align: center;
+    margin: 10px;
+    cursor: pointer;
+}
+
+.game-list-tile-header {
+    font-size: 20px;
+    height: 20%;
+    padding-top: 10px;
+}
+
+.game-list-tile-content {
+    position: relative;
+    height: 80%;
+}
+
+.local-game-tile-new {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20pt;
+    background-color: #f5ce9f;
+    border: 5px groove #b8581e;
+}
+
+.game-board {
+    height: 100%;
+    width: 100%;
+    background-color: #f5ce9f;
+}
+
+/* .game-board-row {
+    min-height: 10px;
+} */
+
+.game-board-col {
+    height: 12.5%;
+    width: 12.5%;
+    font-family: 'chess-icon';
+    text-align: center;
+    font-size: 40px;
+    cursor: default;
+}
+
+.game-board.small .game-board-col {
+    font-size: 10px;
+}
+
+.game-list-tile-board-wrapper {
+    height: 140px;
+    width: 140px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.game-board-col.clickable {
+    cursor: pointer;
+}
+
+.game-board-col.selected {
+    border: white 5px solid;
+}
+
+.game-board-row:nth-child(odd) .game-board-col:nth-child(even), .game-board-row:nth-child(even) .game-board-col:nth-child(odd) {
+	background: #b8581e;
+}
+
+.active-game-board-wrapper {
+    height: 500px;
+    width: 500px;
+}
+
+
+/* Chess icon font def */
+@font-face {
+    font-family: 'chess-icon';
+    src: url('fonts/casefont.ttf');
+  }

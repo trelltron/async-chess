@@ -3,20 +3,28 @@ import { connect } from 'react-redux'
 
 import AuthModal from './AuthModal';
 import Navbar from './Navbar';
-
+import ActiveGame from './ActiveGame';
+import GameList from './GameList';
 
 class App extends React.Component {
   render() {
     return <div className='app-root'>
       <Navbar/>
-      <div className='app-wrapper'><span className='app-placeholder'>Main App Placeholder</span></div>
-      { !this.props.user ? <AuthModal/> : null }
+      { 
+        this.props.user ? 
+          <div className="app-content-wrapper">
+            { this.props.activeGame ? <ActiveGame/> : <GameList/>}
+          </div> 
+        : 
+          <AuthModal/> 
+      }
     </div>
   }
 }
 
 const mapStateToProps = state => ({
-  user: state.auth.user
+  user: state.auth.user,
+  activeGame: state.activeGame
 })
 
 export default connect(
