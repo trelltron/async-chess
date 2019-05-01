@@ -31,7 +31,7 @@ describe('Auth root function tests', function() {
       let res = make_response_mock();
       get_me(req, res);
       res._called_status.should.have.lengthOf(1);
-      res._called_status[0].should.equal(404);
+      res._called_status[0].should.equal(401);
       res._called_end.should.equal(1);
     });
 

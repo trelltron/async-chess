@@ -14,7 +14,12 @@ function query(text, params, callback) {
   const start = Date.now();
   return pool.query(text, params, (err, res) => {
     const duration = Date.now() - start
-    console.log('executed query', { text, duration, rows: res.rowCount })
+    console.log('executed query', { 
+      text, 
+      duration, 
+      error: !!err, 
+      rowCount: res ? res.rowCount : null
+    })
     callback(err, res)
   })
 }

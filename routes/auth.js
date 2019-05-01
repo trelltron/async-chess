@@ -14,7 +14,7 @@ async function verifyToken(token) {
 // Get the user for this session if one exists
 const get_me = (req, res) => {
   if (!req.session.user_uid) {
-    res.status(404).end();
+    res.status(401).end();
     return;
   } 
 
@@ -50,7 +50,7 @@ const post_login = (req, res) => {
       } else {
         // DB should enforce uniqueness on google_id field, so this means no user
         // TODO: Make sure the DB actually respects the above
-        res.status(404).json();
+        res.status(404).end();
       }
     });
   }).catch((error) => {
@@ -62,7 +62,7 @@ const post_login = (req, res) => {
 const post_signup = (req, res) => {
   console.log(req.body);
   if (!req.body.token || !req.body.nickname) {
-    res.status(400).json();
+    res.status(400).end();
     return;
   }
   console.log('verifying token')
@@ -96,6 +96,7 @@ const post_logout = (req, res) => {
   })
 };
 
+// Register routes
 routes.get('/me', get_me);
 routes.post('/login', post_login);
 routes.post('/signup', post_signup);

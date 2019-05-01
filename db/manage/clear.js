@@ -1,7 +1,9 @@
 const query = require('../query');
 
 const CLEAR_SQL = `
- DROP TABLE IF EXISTS users;
+  DROP TABLE IF EXISTS games;
+
+  DROP TABLE IF EXISTS users;
 `
 
 query(CLEAR_SQL, [], (err, res) => {

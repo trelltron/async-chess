@@ -1,4 +1,5 @@
 
 module.exports = {
-  authRouter: require('./auth')
+  authRouter: require('./auth'),
+  gamesRouter: require('./games')
 }

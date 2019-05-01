@@ -1,10 +1,10 @@
 const express = require('express');
-const session = require('express-session')
+const session = require('express-session');
 const bodyParser = require('body-parser');
 
-const uuid = require('uuid/v4')
+const uuid = require('uuid/v4');
 
-const { authRouter } = require('./routes')
+const { authRouter, gamesRouter } = require('./routes')
 
 require('dotenv').config();
 
@@ -19,9 +19,10 @@ app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: true
-}))
+}));
 
-app.use('/api/v1/auth', authRouter)
+app.use('/api/v1/auth', authRouter);
+app.use('/api/v1/games', gamesRouter);
 
 if (!module.parent) app.listen(port, () => console.log(`Listening on port ${port}`));
 
