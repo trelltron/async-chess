@@ -4,6 +4,8 @@ const Chess = require('chess.js').Chess;
 
 const db = require('../db')
 
+const otherSide = (side) => (side === 'w') ? 'b' : 'w';
+
 const resolveGameState = (data) => {
   let state = Chess();
   if (data && data.history) {
@@ -14,12 +16,14 @@ const resolveGameState = (data) => {
   return state;
 };
 
+// Quickly work out turn info from history
 const getTurnInfo = (history) => {
   let side = (history.length % 2) ? 'b' : 'w';
   let turn = Math.floor(history.length / 2) + 1
   return  { side, turn }
 };
 
+// Flatten game data for frontend
 const formatGame = (user_uid) => (game) => {
   let opponent_nickname, my_side;
   if (user_uid === game.player_white_uid) {
@@ -39,7 +43,9 @@ const formatGame = (user_uid) => (game) => {
     my_side,
     current_side: side,
     opponent_nickname,
-    turn
+    turn,
+    finished: game.data.finished,
+    winner: game.data.winner
   }
 }
 
@@ -64,7 +70,7 @@ const post_invite = (req, res) => {
     res.status(401).end();
     return;
   }
-  let data = { history: [] };
+  let data = { history: [], finished: null, winner: null };
 
   db.users.get_by_nickname(req.body.nickname, (err, result) => {
     if (err) {
@@ -122,8 +128,15 @@ const post_next_move = (req, res) => {
 
     let validate = gameState.move(move);
     if (!validate) return res.status(400).json({ code: 'move_invalid' });
-
     data.history.push(move);
+
+    if (gameState.game_over()) {
+      data.finished = true;
+      if (gameState.in_checkmate()) {
+        data.winner = otherSide(gameState.turn());
+      }
+    }
+
     db.games.update_if_timestamp(game_uid, data, last_updated, (err, result) => {
       if (err) {
         throw err;

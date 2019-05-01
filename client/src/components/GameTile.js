@@ -14,12 +14,36 @@ class GameTile extends React.Component {
     }
   }
   getHeaderText() {
-    if (!this.props.game) return  "Start local game"
+    if (!this.props.game) return  "Start local game";
 
     if (this.props.game.uid === 'local') {
       return 'Resume local game'
     }
-    return "Resume online game"
+
+    if (this.props.game.finished) {
+      if (!this.props.game.winner) {
+        return <span>
+          Draw.
+        </span>
+      }
+      if (this.props.game.winner == this.props.game.my_side) {
+        return <span className="text-success">
+          You Won!
+        </span>
+      } else {
+        return <span className="text-loss">
+          You Lost!
+        </span>
+      }
+    }
+
+    let myTurn = (this.props.game.my_side ===  this.props.game.current_side);
+    if (myTurn) {
+      return <span className="text-flash">
+        Your Turn!
+      </span>
+    }
+    return `Waiting for player: ${this.props.game.opponent_nickname}`
   }
   render() {
     return (

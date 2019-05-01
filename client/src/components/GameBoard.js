@@ -10,17 +10,17 @@ const getSymbol = (content) => {
   if (!content) return null;
   switch (content.type) {
     case 'k':
-      return content.color === 'w' ? 'k' : 'l'
+      return content.color === 'w' ? 'k' : 'l';
     case 'q':
-      return content.color === 'w' ? 'q' : 'w'
+      return content.color === 'w' ? 'q' : 'w';
     case 'n':
-      return content.color === 'w' ? 'n' : 'm'
+      return content.color === 'w' ? 'n' : 'm';
     case 'b':
-      return content.color === 'w' ? 'b' : 'v'
+      return content.color === 'w' ? 'b' : 'v';
     case 'r':
-      return content.color === 'w' ? 'r' : 't'
+      return content.color === 'w' ? 'r' : 't';
     case 'p':
-      return content.color === 'w' ? 'p' : 'o'
+      return content.color === 'w' ? 'p' : 'o';
   }
 };
 
@@ -29,7 +29,7 @@ class GameBoard extends React.Component {
   render() {
     let highlighted = this.props.selected ? [this.props.selected] : [];
     let gameState = generateBoard(this.props.state);
-    let activeSide = gameState.turn()
+    let activeSide = this.props.state.uid === 'local' ? gameState.turn() : this.props.state.my_side;
 
     if (this.props.currentMove) {
       highlighted.push(this.props.currentMove.to);
