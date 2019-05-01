@@ -13,7 +13,7 @@ class App extends React.Component {
       { 
         this.props.user ? 
           <div className="app-content-wrapper">
-            { this.props.activeGame ? <ActiveGame/> : <GameList/>}
+            { this.props.activeGameId ? <ActiveGame/> : <GameList/>}
           </div> 
         : 
           <AuthModal/> 
@@ -24,7 +24,7 @@ class App extends React.Component {
 
 const mapStateToProps = state => ({
   user: state.auth.user,
-  activeGame: state.activeGame
+  activeGameId: state.activeGameId
 })
 
 export default connect(

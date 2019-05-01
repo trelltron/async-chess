@@ -29,25 +29,33 @@ class GameBoard extends React.Component {
   render() {
     let highlighted = this.props.selected ? [this.props.selected] : [];
     let gameState = generateBoard(this.props.state);
+    let activeSide = gameState.turn()
 
     if (this.props.currentMove) {
       highlighted.push(this.props.currentMove.to);
       highlighted.push(this.props.currentMove.from);
       gameState.move(this.props.currentMove);
     }
+
+    let viewRow = row.slice()
+    let viewCol = col.slice()
+    if (activeSide === 'b') {
+      viewCol.reverse();
+      viewRow.reverse();
+    }
     return (
       <table className={'game-board ' + this.props.size}>
         <tbody>
         {
-          row.map((rowCoord) => {
+          viewRow.map((rowCoord) => {
             return <tr key={"board-row-" + rowCoord} className="game-board-row">
               {
-                col.map((colCoord) => {
+                viewCol.map((colCoord) => {
                   const tileID = colCoord + rowCoord;
                   const content = gameState.get(tileID);
                   let css = 'game-board-col';
                   if (this.props.clickable === 'all' || (
-                      this.props.clickable === 'own' && content && content.color === gameState.turn())) {
+                      this.props.clickable === 'own' && content && content.color === activeSide)) {
                     css = css + ' clickable';
                   }
                   if (highlighted.indexOf(tileID) > -1) {

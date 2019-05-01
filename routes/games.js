@@ -14,6 +14,35 @@ const resolveGameState = (data) => {
   return state;
 };
 
+const getTurnInfo = (history) => {
+  let side = (history.length % 2) ? 'b' : 'w';
+  let turn = Math.floor(history.length / 2) + 1
+  return  { side, turn }
+};
+
+const formatGame = (user_uid) => (game) => {
+  let opponent_nickname, my_side;
+  if (user_uid === game.player_white_uid) {
+    my_side = 'w';
+    opponent_nickname = game.black_nickname;
+  } else {
+    my_side = 'b';
+    opponent_nickname = game.white_nickname;
+  }
+
+  let { side, turn } = getTurnInfo(game.data.history)
+
+  return {
+    uid: game.uid,
+    history: game.data.history,
+    last_updated: game.last_updated,
+    my_side,
+    current_side: side,
+    opponent_nickname,
+    turn
+  }
+}
+
 // Return a list of games the provided user is involved in
 const get_games = (req, res) => {
   if (!req.session.user_uid) {
@@ -25,7 +54,7 @@ const get_games = (req, res) => {
     if (err) {
       throw err;
     }
-    res.status(200).json({ games: result.rows });
+    res.status(200).json({ games: result.rows.map(formatGame(req.session.user_uid)) });
   });
 };
 
@@ -77,17 +106,17 @@ const post_next_move = (req, res) => {
     let data = result.rows[0].data;
     let move = req.body;
     let last_updated = result.rows[0].last_updated;
-    let player_black = result.rows[0].player_black;
-    let player_white = result.rows[0].player_white;
+    let player_black_uid = result.rows[0].player_black_uid;
+    let player_white_uid = result.rows[0].player_white_uid;
     let gameState = resolveGameState(data);
 
-    if (player_black !== req.session.user_uid && player_white !== req.session.user_uid) {
+    if (player_black_uid !== req.session.user_uid && player_white_uid !== req.session.user_uid) {
       return res.status(403).json();
     }
 
     let current_player = gameState.turn();
-    if ((current_player === 'b' && player_black !== req.session.user_uid) || 
-        (current_player === 'w' && player_white !== req.session.user_uid)) {
+    if ((current_player === 'b' && player_black_uid !== req.session.user_uid) || 
+        (current_player === 'w' && player_white_uid !== req.session.user_uid)) {
       return res.status(400).json({ code: 'turn_invalid' });
     }
 
@@ -99,6 +128,7 @@ const post_next_move = (req, res) => {
       if (err) {
         throw err;
       }
+      console.log(result);
       if (result.rows.length < 1) {
         return res.status(409).json({ code: 'state_changed' });
       }

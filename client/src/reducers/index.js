@@ -1,4 +1,8 @@
-import { SET_TOKEN, SET_USER, SET_AUTH_REQUIRED, SET_ACTIVE_GAME, SET_LOCAL_GAME } from '../actions'
+import { 
+  SET_TOKEN, SET_USER, SET_AUTH_REQUIRED, 
+  SET_GAME_LIST, SET_ACTIVE_GAME_ID, UPDATE_GAME_STATE, 
+  CREATE_LOCAL_GAME, DELETE_LOCAL_GAME
+} from '../actions';
 
 const loadLocalGame = () => {
   try {
@@ -6,6 +10,13 @@ const loadLocalGame = () => {
   } catch {
     return null;
   }
+};
+
+const writeLocalGame = (game) => {
+  if (!game) {
+    return localStorage.removeItem('local-game');
+  }
+  localStorage.setItem('local-game', JSON.stringify(game));
 }
 
 const initialState = {
@@ -14,9 +25,10 @@ const initialState = {
     auth_required: false,
     token: null
   },
-  activeGame: null,
-  localGame: loadLocalGame()
-}
+  activeGameId: null,
+  localGame: loadLocalGame(),
+  gameList: []
+};
 
 export default function(state=initialState, action) {
   switch (action.type) {
@@ -32,15 +44,49 @@ export default function(state=initialState, action) {
       return Object.assign({}, state, {
         auth: Object.assign({}, state.auth, { auth_required: true })
       })
-    case SET_ACTIVE_GAME:
+    case SET_ACTIVE_GAME_ID:
       return Object.assign({}, state, {
-        activeGame: action.game
+        activeGameId: action.uid
       })
-    case SET_LOCAL_GAME:
-      localStorage.setItem('local-game', JSON.stringify(action.game));
+    case UPDATE_GAME_STATE:
+      if (action.game.uid === 'local') {
+        writeLocalGame(action.game);
+        return Object.assign({}, state, {
+          localGame: action.game
+        });
+      }
+      let gameList = state.gameList.map((game) => {
+        if (game.uid === action.game.uid) {
+          return Object.assign({}, action.game);
+        } else {
+          return Object.assign({}, game)
+        }
+      });
       return Object.assign({}, state, {
-        localGame: action.game
-      })
+        gameList
+      });
+    case SET_GAME_LIST:
+      return Object.assign({}, state, {
+        gameList: action.games
+      });
+    case CREATE_LOCAL_GAME:
+      let localGame = { 
+        uid: 'local', 
+        history: [], 
+        current_side: 'w', 
+        turn: 1 
+      };
+      writeLocalGame(localGame);
+      return Object.assign({}, state, {
+        localGame,
+        activeGameId: 'local'
+      });
+    case DELETE_LOCAL_GAME:
+      writeLocalGame(null);
+      return Object.assign({}, state, {
+        localGame: null,
+        activeGameId: null
+      });
     default:
       return state
   }

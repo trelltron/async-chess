@@ -12,8 +12,8 @@ const SETUP_SQL = `
   CREATE TABLE
     games (
       uid UUID PRIMARY KEY DEFAULT gen_random_uuid(),
-      player_white UUID REFERENCES users(uid),
-      player_black UUID REFERENCES users(uid),
+      player_white_uid UUID REFERENCES users(uid),
+      player_black_uid UUID REFERENCES users(uid),
       data JSON NOT NULL,
       last_updated TIMESTAMP DEFAULT NOW()
     );

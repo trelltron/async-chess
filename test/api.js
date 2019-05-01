@@ -230,9 +230,10 @@ describe('API /api/v1/games', function() {
               games: [
                 {
                   uid: 'game-1-uid',
-                  data: {
-                    history: []
-                  }
+                  history: [],
+                  my_side: 'b',
+                  current_side: 'w',
+                  turn: 1
                 }
               ]
             }, done)
@@ -363,7 +364,7 @@ describe('API /api/v1/games', function() {
         { nickname: 'test', uid: 'player-uid' }
       ];
       dbMock.games._get_by_uid_result.rows = [
-        { uid:  'game-1-uid', player_black: 'other-player-uid', player_white: 'third-player-uid', data: { history: [] }, timestamp: 'test-timestamp'}
+        { uid:  'game-1-uid', player_black_uid: 'other-player-uid', player_white_uid: 'third-player-uid', data: { history: [] }, timestamp: 'test-timestamp'}
       ]
       mockery.registerMock('../db', dbMock);
 
@@ -395,7 +396,7 @@ describe('API /api/v1/games', function() {
         { nickname: 'test', uid: 'player-uid' }
       ];
       dbMock.games._get_by_uid_result.rows = [
-        { uid:  'game-1-uid', player_black: 'player-uid', player_white: 'other-player-uid', data: { history: [] }, timestamp: 'test-timestamp'}
+        { uid:  'game-1-uid', player_black_uid: 'player-uid', player_white_uid: 'other-player-uid', data: { history: [] }, timestamp: 'test-timestamp'}
       ]
       mockery.registerMock('../db', dbMock);
 
@@ -427,7 +428,7 @@ describe('API /api/v1/games', function() {
         { nickname: 'test', uid: 'player-uid' }
       ];
       dbMock.games._get_by_uid_result.rows = [
-        { uid:  'game-1-uid', player_black: 'other-player-uid', player_white: 'player-uid', data: { history: [] }, timestamp: 'test-timestamp'}
+        { uid:  'game-1-uid', player_black_uid: 'other-player-uid', player_white_uid: 'player-uid', data: { history: [] }, timestamp: 'test-timestamp'}
       ]
       mockery.registerMock('../db', dbMock);
 
@@ -462,7 +463,7 @@ describe('API /api/v1/games', function() {
         { nickname: 'test', uid: 'player-uid' }
       ];
       dbMock.games._get_by_uid_result.rows = [
-        { uid:  'game-1-uid', player_black: 'other-player-uid', player_white: 'player-uid', data: { history: [] }, timestamp: 'test-timestamp'}
+        { uid:  'game-1-uid', player_black_uid: 'other-player-uid', player_white_uid: 'player-uid', data: { history: [] }, timestamp: 'test-timestamp'}
       ]
       dbMock.games._update_if_timestamp_result.rows = [
         { uid: 'game-1-uid' }

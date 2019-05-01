@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import GameBoard from './GameBoard';
 
 import { generateBoard } from './utils';
-import { setLocalGame, setActiveGame } from '../actions';
+import { updateGameState, setActiveGameId, deleteLocalGame } from '../actions';
 
 const otherSide = (side) => (side === 'w') ? 'b' : 'w';
 const sideIdToText = (side) => (side === 'w') ? 'White' : 'Black';
@@ -25,6 +25,8 @@ class ActiveGame extends React.Component {
     }
   }
   componentDidMount() {
+    if (!this.props.activeGame) return this.props.setActiveGameId(null);
+
     const gameState = generateBoard(this.props.activeGame);
     this.check_for_finished(gameState);
   }
@@ -41,7 +43,12 @@ class ActiveGame extends React.Component {
     }
   }
   tileClick(tileID) {
-    if (this.state.currentMove) return;
+    if (this.state.currentMove || this.state.finished) return;
+
+    if (this.props.activeGame.uid !== 'local' && 
+        this.props.activeGame.my_side !==  this.props.activeGame.current_side) {
+      return
+    }
 
     const gameState = generateBoard(this.props.activeGame);
     const tile = gameState.get(tileID);
@@ -53,36 +60,50 @@ class ActiveGame extends React.Component {
       let move = { from: this.state.selected, to: tileID };
       let verified = gameState.move(move);
       if (verified) {
-        this.setState({ currentMove: move, selected: null });
-        return;
+        return this.setState({ currentMove: move, selected: null });
       }
     }
     if (tile && tile.color === gameState.turn()) {
       this.setState({ selected: tileID });
     }
   }
-  onConfirm() {
+  resolveCurrentMove() {
     let updated = Object.assign({}, this.props.activeGame, {
       history: this.props.activeGame.history.map((move) => {
         return Object.assign({}, move)
       })
     });
     updated.history.push(this.state.currentMove);
-    this.props.setActiveGame(updated);
-    this.props.setLocalGame(updated);
+    this.props.updateGameState(updated);
     this.setState({ currentMove: null });
     const gameState = generateBoard(updated);
     this.check_for_finished(gameState);
+  }
+  onConfirm() {
+    if (this.props.activeGame.uid === 'local') {
+      this.resolveCurrentMove();
+    } else {
+      fetch(`/api/v1/games/${this.props.activeGame.uid}/move`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(this.state.currentMove),
+      }).then((response) => {
+        if (response.status === 201) {
+          return this.resolveCurrentMove();
+        }
+      });
+    }
   }
   onUndo() {
     this.setState({ currentMove: null });
   }
   onBack() {
-    this.props.setActiveGame(null);
+    this.props.setActiveGameId(null);
   }
   onDelete() {
-    this.props.setLocalGame(null);
-    this.props.setActiveGame(null);
+    this.props.deleteLocalGame();
   }
   getStateText() {
     if (this.state.finished) {
@@ -101,7 +122,10 @@ class ActiveGame extends React.Component {
   }
   render() {
     let clickable = (
-      (this.state.finished || this.state.currentMove) ? 
+        (this.state.finished || this.state.currentMove || (
+          this.props.activeGame.uid !== 'local' && 
+          this.props.activeGame.my_side !==  this.props.activeGame.current_side)
+        ) ? 
       'none' : (this.state.selected ? 'all' : 'own')  
     );
     return (
@@ -111,7 +135,6 @@ class ActiveGame extends React.Component {
         </div>
         <div className="active-game-board-wrapper">
           <GameBoard 
-            allowInput={true} 
             state={this.props.activeGame}
             tileClick={(tileID) => this.tileClick(tileID)}
             clickable={clickable}
@@ -132,6 +155,7 @@ class ActiveGame extends React.Component {
             className='ac-button'
             onClick={() => this.onBack()}> Back </button>
           <button 
+            disabled={!(this.props.activeGame.uid === 'local')}
             className='ac-button'
             onClick={() => this.onDelete()}> Delete </button>
         </div>
@@ -140,13 +164,23 @@ class ActiveGame extends React.Component {
   }
 }
 
+const getActiveGameFromState = (state) => {
+  if (state.activeGameId === 'local') {
+    return state.localGame;
+  }
+  return state.gameList.find((game) => {
+    return game.uid === state.activeGameId
+  });
+}
+
 const mapStateToProps = state => ({
-  activeGame: state.activeGame
+  activeGame: getActiveGameFromState(state)
 })
 
 const mapDispatchToProps = dispatch => ({
-  setActiveGame: (game) => dispatch(setActiveGame(game)),
-  setLocalGame: (game) => dispatch(setLocalGame(game))
+  setActiveGameId: (game) => dispatch(setActiveGameId(game)),
+  updateGameState: (game) => dispatch(updateGameState(game)),
+  deleteLocalGame: () => dispatch(deleteLocalGame())
 })
 
 export default connect(

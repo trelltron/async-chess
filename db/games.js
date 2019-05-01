@@ -2,7 +2,7 @@ const query = require('./query');
 
 const GET_BY_UID = `
   SELECT
-    uid, player_white, player_black, data, last_updated
+    uid, player_white_uid, player_black_uid, data, last_updated::text
   FROM
     games
   WHERE
@@ -13,13 +13,23 @@ function get_by_uid(uid, callback) {
   query(GET_BY_UID, [uid], callback);
 }
 
+// TODO: Might be betetr to explicitly merge 2 subqueries for the black/white cases
 const LIST_FOR_USER_UID_QUERY = `
-  SELECT 
-    uid, data 
-  FROM 
+  SELECT
+    games.uid, games.player_white_uid, games.player_black_uid, 
+    player_white.nickname AS white_nickname, 
+    player_black.nickname AS black_nickname,
+    games.data, games.last_updated::text
+  FROM
     games
-  WHERE 
-    player_black = $1::uuid OR player_white = $1::uuid
+  JOIN
+    users AS player_white ON player_white.uid = games.player_white_uid
+  JOIN
+    users AS player_black ON player_black.uid = games.player_black_uid
+  WHERE
+    player_black_uid = $1::uuid OR player_white_uid = $1::uuid
+  ORDER BY
+    last_updated DESC
 `
 
 function list_for_user_uid(uid, callback) {
@@ -28,24 +38,24 @@ function list_for_user_uid(uid, callback) {
 
 const INSERT_QUERY = `
   INSERT INTO
-    games (player_white, player_black, data)
+    games (player_white_uid, player_black_uid, data)
   VALUES
-    ($1::uuid, $2::uuid, $3::text)
+    ($1::uuid, $2::uuid, $3::json)
   RETURNING uid
 `
 
 function insert(white_uid, black_uid, data, callback) {
-  query(INSERT_QUERY, [white_uid, black_uid, JSON.stringify(data)], callback);
+  query(INSERT_QUERY, [white_uid, black_uid, data], callback);
 }
 
 const UPDATE_QUERY = `
   UPDATE
     games
   SET
-    data = $2::text,
+    data = $2::json,
     last_updated = now()
   WHERE
-    uid = $1::uuid AND last_updated = $3::timestamp
+    uid = $1::uuid AND last_updated = ($3::text)::timestamp
   RETURNING
     uid, data, last_updated
 `
