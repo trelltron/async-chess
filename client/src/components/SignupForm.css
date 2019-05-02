@@ -1,0 +1,10 @@
+.signup-form {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    font-size: 20pt;
+    background-color: #f5ce9f;
+    border: 5px groove #b8581e;
+}

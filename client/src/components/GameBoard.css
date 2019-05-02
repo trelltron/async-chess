@@ -1,0 +1,34 @@
+
+table.game-board {
+    height: 100%;
+    width: 100%;
+    background-color: #f5ce9f;
+    border-collapse: collapse;
+    border: #b8581e 4px solid;
+    box-shadow: 5px 5px;
+}
+
+table.game-board td {
+    height: 12.5%;
+    width: 12.5%;
+    font-family: 'chess-icon';
+    text-align: center;
+    font-size: 40px;
+    cursor: default;
+}
+
+table.game-board.small td {
+    font-size: 10px;
+}
+
+table.game-board td.clickable {
+    cursor: pointer;
+}
+
+table.game-board td.selected {
+    border: white 5px solid;
+}
+
+table.game-board tr:nth-child(odd) td:nth-child(even), table.game-board tr:nth-child(even) td:nth-child(odd) {
+    background: #b8581e;
+}

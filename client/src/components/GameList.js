@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux'
 
+import './GameList.css';
+
 import {setGameList} from '../actions';
 
 import InviteTile from './InviteTile';

@@ -1,5 +1,7 @@
 import React from 'react';
 
+import './InviteTile.css';
+
 class InviteTile extends React.Component {
   constructor(props) {
     super(props);
@@ -64,16 +66,16 @@ class InviteTile extends React.Component {
 
   render() {
     return (
-      <div className="game-list-tile">
-        <div className="game-list-tile-header"> Invite a User to a game by their username </div>
-        <div className="game-list-tile-header"> {this.getMessage()} </div>
-        <div className="game-list-invite-input">
+      <div className="tile invite">
+        <div className="header"> Invite a User to a game by their username </div>
+        <div className="header"> {this.getMessage()} </div>
+        <div className="invite-input">
           <input 
             value={this.state.nickname} 
             onChange={(e) => this.handleChange(e)}
             onKeyPress={(e) => this.handleKeyPress(e)}></input>
         </div>
-        <div className="game-list-invite-button">
+        <div className="invite-button">
           <button className='ac-button' onClick={(e) => this.handleSubmit(e)}> Confirm </button>
         </div>
       </div>

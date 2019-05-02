@@ -8,13 +8,11 @@ import GameList from './GameList';
 
 class App extends React.Component {
   render() {
-    return <div className='app-root'>
+    return <div>
       <Navbar/>
       { 
         this.props.user ? 
-          <div className="app-content-wrapper">
-            { this.props.activeGameId ? <ActiveGame/> : <GameList/>}
-          </div> 
+          this.props.activeGameId ? <ActiveGame/> : <GameList/>
         : 
           <AuthModal/> 
       }

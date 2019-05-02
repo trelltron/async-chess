@@ -1,0 +1,13 @@
+
+
+
+.game-list .tile .content .tile-new {
+    font-size: 20pt;
+    background-color: #f5ce9f;
+    border: 5px groove #b8581e;
+}
+
+.game-list .tile .content .board-wrapper {
+    height: 140px;
+    width: 140px;
+}

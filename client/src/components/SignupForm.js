@@ -1,5 +1,7 @@
 import React from 'react';
 
+import './SignupForm.css';
+
 class SignupForm extends React.Component {
   constructor(props) {
     super(props);

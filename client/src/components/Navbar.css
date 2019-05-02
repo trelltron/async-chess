@@ -1,0 +1,11 @@
+
+.navbar {
+    height: 40px;
+    background-color: #b8581e;
+    width: 100%;
+}
+
+.navbar .ac-button {
+    float: right;
+    height: 100%;
+}

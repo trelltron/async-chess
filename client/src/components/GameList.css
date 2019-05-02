@@ -1,0 +1,32 @@
+
+.game-list {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.game-list .tile {
+    background-color: #f5ce9f;
+    height: 200px;
+    width: 400px;
+    border-radius: 25px;
+    text-align: center;
+    margin: 10px;
+    border: #b8581e 4px solid;
+    box-shadow: 5px 5px;
+}
+
+.game-list .tile.clickable {
+    cursor: pointer;
+}
+
+.game-list .tile .header {
+    font-size: 20px;
+    height: 20%;
+    padding-top: 10px;
+}
+
+.game-list .tile .content {
+    position: relative;
+    height: 80%;
+}

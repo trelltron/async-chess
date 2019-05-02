@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux'
 
+import './ActiveGame.css';
+
 import GameBoard from './GameBoard';
 
 import { generateBoard } from './utils';
@@ -111,7 +113,6 @@ class ActiveGame extends React.Component {
         return 'Game ended in a draw.'
       }
       if (this.state.finished.state === 'checkmate') {
-      
         return `Game Over! ${sideIdToText(this.state.finished.winner)} side won! `
       }
       return 'Game Over!!!'
@@ -130,10 +131,10 @@ class ActiveGame extends React.Component {
     );
     return (
       <div className='active-game'>
-        <div>
+        <div className="header">
           {this.getStateText()}
         </div>
-        <div className="active-game-board-wrapper">
+        <div className="board-wrapper">
           <GameBoard 
             state={this.props.activeGame}
             tileClick={(tileID) => this.tileClick(tileID)}
@@ -142,7 +143,7 @@ class ActiveGame extends React.Component {
             currentMove={this.state.currentMove}
             />
         </div>
-        <div className='active-game-controls'>
+        <div>
           <button 
             className='ac-button' 
             disabled={!this.state.currentMove}

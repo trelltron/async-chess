@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux'
 
+import './GameTile.css';
+
 import {setActiveGameId, updateGameState, createLocalGame} from '../actions';
 
 import GameBoard from './GameBoard';
@@ -32,7 +34,7 @@ class GameTile extends React.Component {
         </span>
       } else {
         return <span className="text-loss">
-          You Lost!
+          You Lost...
         </span>
       }
     }
@@ -47,19 +49,19 @@ class GameTile extends React.Component {
   }
   render() {
     return (
-      <div className="game-list-tile clickable" onClick={() => this.registerClick()}>
-        <div className="game-list-tile-header"> 
+      <div className="tile clickable" onClick={() => this.registerClick()}>
+        <div className="header"> 
           { this.getHeaderText() }
         </div>
-        <div className="game-list-tile-content">
+        <div className="content">
           { 
             this.props.game ? 
-              <div className='game-list-tile-board-wrapper'>
+              <div className='board-wrapper centered'>
                 <GameBoard size='small' state={this.props.game} />
               </div>
             :
               <div 
-                className="local-game-tile-new"
+                className="tile-new centered"
               > New </div>
           }
         </div>

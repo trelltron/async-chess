@@ -1,0 +1,54 @@
+.modal {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
+    background-color: rgba(0,0,0, 0.5);
+}
+
+.modal-inner {
+    position: absolute;
+    left: 25%;
+    right: 25%;
+    top: 25%;
+    bottom: 25%;
+    margin: auto;
+    background-color: #f5ce9f;
+    background-image: linear-gradient(45deg, #b8581e 25%, transparent 25%, transparent 75%, #b8581e 75%, #b8581e), linear-gradient(45deg, #b8581e 25%, transparent 25%, transparent 75%, #b8581e 75%, #b8581e);
+    background-size: 60px 60px;
+    background-position: 0 0, 30px 30px;
+}
+
+@media only screen and (max-width: 768px) {
+    .modal-inner {
+        left: 5%;
+        right: 5%;
+    }
+}
+
+@media only screen and (max-height: 480px) {
+    .modal-inner {
+        top: 5%;
+        bottom: 5%;
+    }
+}
+
+.modal-header {
+    position: relative;
+    height: 50%;
+}
+
+.modal-content {
+    position: relative;
+    height: 50%;
+}
+
+.auth-modal .modal-header-text {
+    font-size: 20pt;
+    background-color: #f5ce9f;
+    border: 5px groove #b8581e;
+}

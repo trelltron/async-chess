@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux'
 
+import './AuthModal.css';
+
 import GoogleLogin from 'react-google-login';
 
 import SignupForm from './SignupForm';
@@ -60,7 +62,7 @@ class AuthModal extends React.Component {
 
   fill_modal_content() {
     if (!this.props.auth.auth_required) {
-      return <div className='auth-modal-loading-wrapper'>
+      return <div className='centered'>
         <Loading/>
       </div>
     }
@@ -76,7 +78,7 @@ class AuthModal extends React.Component {
     }
 
     return (
-      <div className='auth-modal-button-wrapper'>
+      <div className='centered'>
         <GoogleLogin
           clientId={process.env.REACT_APP_GOOGLE_CLIENT_ID}
           buttonText="Login"
@@ -91,14 +93,14 @@ class AuthModal extends React.Component {
 
   render() {
     return (
-      <div className= 'auth-modal'>
-        <div className= 'auth-modal-inner'>
-          <div className='auth-modal-top-panel'>
-            <div className='auth-modal-text'>
+      <div className= 'modal auth-modal'>
+        <div className= 'modal-inner'>
+          <div className='modal-header'>
+            <div className='modal-header-text centered'>
               { this.state.error ? this.state.error : 'Please Sign in. ' }
             </div>
           </div>
-          <div className='auth-modal-content'>
+          <div className='modal-content'>
             {this.fill_modal_content()}
           </div>
         </div>

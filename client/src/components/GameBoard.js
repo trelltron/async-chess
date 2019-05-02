@@ -1,5 +1,7 @@
 import React from 'react';
 
+import './GameBoard.css';
+
 import { generateBoard } from './utils';
 
 const row = [8, 7, 6, 5, 4, 3, 2, 1];
@@ -48,12 +50,12 @@ class GameBoard extends React.Component {
         <tbody>
         {
           viewRow.map((rowCoord) => {
-            return <tr key={"board-row-" + rowCoord} className="game-board-row">
+            return <tr key={"board-row-" + rowCoord}>
               {
                 viewCol.map((colCoord) => {
                   const tileID = colCoord + rowCoord;
                   const content = gameState.get(tileID);
-                  let css = 'game-board-col';
+                  let css = '';
                   if (this.props.clickable === 'all' || (
                       this.props.clickable === 'own' && content && content.color === activeSide)) {
                     css = css + ' clickable';
