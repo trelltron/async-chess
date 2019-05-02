@@ -67,7 +67,7 @@ class InviteTile extends React.Component {
   render() {
     return (
       <div className="tile invite">
-        <div className="header"> Invite a User to a game by their username </div>
+        <div className="header"> Invite a User to a game by their nickname </div>
         <div className="header"> {this.getMessage()} </div>
         <div className="invite-input">
           <input 

@@ -59,7 +59,7 @@ Google client ID. Must be the same ID provided to the backend app.
 
 May be required to suppress the frontend build complaining about the backend dependencies.
 
-##testing
+## testing
 
 Backend tests can be run with `npm test`
 
