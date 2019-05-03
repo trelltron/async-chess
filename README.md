@@ -15,15 +15,14 @@ Running this project locally requires access to a postgres instance and a google
 
 5. run `npm run dev`
 
-## 
-
 ## Environment Valiables
 
 Both parts of the application require environment variables to properly configure. 
 
-The frontend will pick up variables defined in `client/.env`
+The frontend will pick up variables defined in `client/.env` or `client/.env.local`. 
+Build configuration is included and committed within `client/.env` so secrets should go in the ignored `client/.env.local` instead
 
-The backend will pick up variables defined in `.env`
+The backend will pick up variables defined in `.env` or `.env.local`. Both files are ignored by git.
 
 ### Node (.env)
 
@@ -68,7 +67,7 @@ Alternatively one can be acquired by going to the [google identity platform sign
 
 Both methods require you to be signed in to a google account which the credentials will be tied to. 
 
-### Frontend (client/.env)
+### Frontend (client/.env.local)
 
 - REACT_APP_GOOGLE_CLIENT_ID (required)
 
@@ -81,7 +80,7 @@ Alternatively one can be acquired by going to the [google identity platform sign
 
 Both methods require you to be signed in to a google account which the credentials will be tied to. 
 
-- SKIP_PREFLIGHT_CHECK
+- SKIP_PREFLIGHT_CHECK = true
 
 May be required to suppress the frontend build complaining about the backend dependencies.
 
