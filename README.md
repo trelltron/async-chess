@@ -15,6 +15,8 @@ Running this project locally requires access to a postgres instance and a google
 
 5. run `npm run dev`
 
+## 
+
 ## Environment Valiables
 
 Both parts of the application require environment variables to properly configure. 
@@ -49,11 +51,25 @@ Secret used by express-session to authenticate sessions. Default is arbitrary in
 
 Google client ID. Must be the same ID provided to the frontend app.
 
+A new client ID can be created by going to the [Google Developer Console](console.developers.google.com), creating a new project,
+going to the credentials tab for that project, and creating a new 'OAuth Client ID'.
+
+Alternatively one can be acquired by going to the [google identity platform sign-in docs](https://developers.google.com/identity/sign-in/web/sign-in#specify_your_apps_client_id) and pressing the handy 'Configure a Project' button.
+
+Both methods require you to be signed in to a google account which the credentials will be tied to. 
+
 ### Frontend (client/.env)
 
 - REACT_APP_GOOGLE_CLIENT_ID (required)
 
 Google client ID. Must be the same ID provided to the backend app.
+
+A new client ID can be created by going to the [Google Developer Console](console.developers.google.com), creating a new project,
+going to the credentials tab for that project, and creating a new 'OAuth Client ID'.
+
+Alternatively one can be acquired by going to the [google identity platform sign-in docs](https://developers.google.com/identity/sign-in/web/sign-in#specify_your_apps_client_id) and pressing the handy 'Configure a Project' button.
+
+Both methods require you to be signed in to a google account which the credentials will be tied to. 
 
 - SKIP_PREFLIGHT_CHECK
 
