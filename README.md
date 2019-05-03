@@ -27,19 +27,29 @@ The backend will pick up variables defined in `.env`
 
 ### Node (.env)
 
-- PG_PORT (default: `5432`)
+- DATABASE_URL 
+
+Connection string for the database. If used all other PG* environment variables can be ignored.
+
+Used to connect to Heroku Postgres instance.
+
+- PGHOST (default: 'localhost')
+
+Host name for postgres instance
+
+- PGPORT (default: `5432`)
 
 Port postgres is running on.
 
-- PG_USER (required)
+- PGUSER (default: 'asyncchess')
 
 Name of postgres user the application will use for queries.
 
-- PG_PASSWORD (required)
+- PGPASSWORD (required)
 
 Password for postgres user the application will use for queries.
 
-- PG_DB_NAME (default: `asyncchess`)
+- PGDATABASE (default: `asyncchess`)
 
 Name of the database the application will be acting on. Provided user must have access. 
 
