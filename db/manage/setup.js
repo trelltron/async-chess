@@ -2,6 +2,8 @@
 const query = require('../query');
 
 const SETUP_SQL = `
+  CREATE EXTENSION IF NOT EXISTS pgcrypto;
+  
   CREATE TABLE 
     users (
       uid UUID PRIMARY KEY DEFAULT gen_random_uuid(),
