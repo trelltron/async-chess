@@ -85,7 +85,6 @@ const post_signup = (req, res) => {
         req.session.user_uid = result.rows[0].uid
         res.status(201).json({ nickname: result.rows[0].nickname });
       } else {
-        // TODO: check if google ID already exists
         db.users.get_by_google_id(google_id, (err, result) => {
           if (err) {
             throw err;
@@ -95,7 +94,7 @@ const post_signup = (req, res) => {
             res.status(200).json({ nickname: result.rows[0].nickname });
           } else {
             // Conflict must have been with nickname column
-            req.status(400).json({ code: 'nickname_exists' })
+            res.status(400).json({ code: 'nickname_exists' })
           }
         });
       }
