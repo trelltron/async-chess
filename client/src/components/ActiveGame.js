@@ -45,6 +45,7 @@ class ActiveGame extends React.Component {
     }
   }
   tileClick(tileID) {
+    console.log(tileID);
     if (this.state.currentMove || this.state.finished) return;
 
     if (this.props.activeGame.uid !== 'local' && 
@@ -60,6 +61,15 @@ class ActiveGame extends React.Component {
         return this.setState({ selected: null });
       }
       let move = { from: this.state.selected, to: tileID };
+
+      // if row is 8 (white) or 1 (black), and piece is pawn, promote to queen
+      let piece = gameState.get(this.state.selected);
+      if (piece.type === 'p' && (
+        (piece.color === 'b' && tileID.charAt(1) === '1') || 
+        (piece.color === 'w' && tileID.charAt(1) === '8')
+      )) {
+        move.promotion = 'q';
+      }
       let verified = gameState.move(move);
       if (verified) {
         return this.setState({ currentMove: move, selected: null });
