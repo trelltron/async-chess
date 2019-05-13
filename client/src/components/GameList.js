@@ -14,7 +14,6 @@ class GameList extends React.Component {
   }
   refreshGameList() {
     fetch('/api/v1/games/').then((response) => {
-      console.log(response);
       if (response.status === 200) {
         response.json().then((result) => {
           this.props.setGameList(result.games);

@@ -141,7 +141,6 @@ const post_next_move = (req, res) => {
       if (err) {
         throw err;
       }
-      console.log(result);
       if (result.rows.length < 1) {
         return res.status(409).json({ code: 'state_changed' });
       }

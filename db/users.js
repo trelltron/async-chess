@@ -42,9 +42,24 @@ function get_or_create(google_id, nickname, callback) {
   query(GET_OR_CREATE_QUERY, [google_id, nickname], callback);
 }
 
+const INSERT_QUERY = `
+  INSERT INTO 
+    users (google_id, nickname) 
+  VALUES 
+    ($1::text, $2::text)
+  ON CONFLICT DO NOTHING
+  RETURNING 
+    uid, nickname
+`
+
+function insert(google_id, nickname, callback) {
+  query(INSERT_QUERY, [google_id, nickname], callback);
+}
+
 module.exports = {
   get_by_uid,
   get_by_nickname,
   get_by_google_id,
-  get_or_create
+  get_or_create,
+  insert
 }

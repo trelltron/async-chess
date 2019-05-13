@@ -32,7 +32,8 @@ describe('Auth root function tests', function() {
       get_me(req, res);
       res._called_status.should.have.lengthOf(1);
       res._called_status[0].should.equal(401);
-      res._called_end.should.equal(1);
+      res._called_json.length.should.equal(1);
+      res._called_json[0].code.should.equal('auth_required');
     });
 
     it('should return 404 when user not found in DB', function() {
@@ -51,7 +52,8 @@ describe('Auth root function tests', function() {
       get_me(req, res);
       res._called_status.should.have.lengthOf(1);
       res._called_status[0].should.equal(404);
-      res._called_end.should.equal(1);
+      res._called_json.length.should.equal(1);
+      res._called_json[0].code.should.equal('user_missing');
     });
 
     it('should return user if valid ID found in session', function() {

@@ -28,7 +28,7 @@ class GameTile extends React.Component {
           Draw.
         </span>
       }
-      if (this.props.game.winner == this.props.game.my_side) {
+      if (this.props.game.winner === this.props.game.my_side) {
         return <span className="text-success">
           You Won!
         </span>

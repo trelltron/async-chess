@@ -24,7 +24,6 @@ class AuthModal extends React.Component {
 
   fetchUserData() {
     fetch('/api/v1/auth/me').then((response) => {
-      console.log(response);
       if (response.status === 200) {
         response.json().then((user) => {
           this.props.setUser(user)
@@ -36,7 +35,6 @@ class AuthModal extends React.Component {
   }
 
   async attemptLogin(data) {
-    console.log(data);
     const response = await fetch('/api/v1/auth/login', {
       method: 'POST',
       headers: {
@@ -44,8 +42,6 @@ class AuthModal extends React.Component {
       },
       body: JSON.stringify({ token: data.tokenId }),
     });
-
-    console.log(response);
 
     switch (response.status) {
       case 200:

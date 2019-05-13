@@ -7,7 +7,7 @@
     "dev": "concurrently --kill-others-on-fail \"npm run server\" \"npm run client\"",
     "start": "node server.js",
     "heroku-postbuild": "cd client && npm install && npm install --only=dev --no-shrinkwrap && npm run build",
-    "test": "mocha",
+    "test": "mocha --recursive",
     "dbsetup": "node db/manage/setup.js",
     "dbclear": "node db/manage/clear.js",
     "dbreset": "npm run dbclear && npm run dbsetup"

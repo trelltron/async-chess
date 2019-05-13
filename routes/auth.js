@@ -14,7 +14,7 @@ async function verifyToken(token) {
 // Get the user for this session if one exists
 const get_me = (req, res) => {
   if (!req.session.user_uid) {
-    res.status(401).end();
+    res.status(401).json({ code: 'auth_required' });
     return;
   } 
 
@@ -26,7 +26,7 @@ const get_me = (req, res) => {
       res.status(200).json(result.rows[0]);
     } else {
       // DB should enforce uniqueness on uid field, so this means no user
-      res.status(404).end();
+      res.status(404).json({ code: 'user_missing' });
     }
   });
 };
@@ -34,8 +34,10 @@ const get_me = (req, res) => {
 // Take google id token, authenticate, check if signed up, return user info if exists, else returns error
 const post_login = (req, res) => {
   if (!req.body.token) {
-    res.status(400).json({ 'error': 'Login requires a google auth token' });
-    return;
+    return res.status(400).json({ 
+      code: 'token_missing', 
+      msg: 'Login requires a google OAuth token' 
+    });
   }
   verifyToken(req.body.token).then((payload) => {
     const google_id = payload['sub']
@@ -50,39 +52,56 @@ const post_login = (req, res) => {
       } else {
         // DB should enforce uniqueness on google_id field, so this means no user
         // TODO: Make sure the DB actually respects the above
-        res.status(404).end();
+        res.status(404).json({ code: 'user_not_found' });
       }
     });
   }).catch((error) => {
-    res.status(400).json({ 'error': 'Token invalid' })
+    res.status(400).json({ code: 'token_invalid' })
   });
 };
 
 // Take google id token and user details, create user object
 const post_signup = (req, res) => {
-  console.log(req.body);
-  if (!req.body.token || !req.body.nickname) {
-    res.status(400).end();
-    return;
+  if (!req.body.token) {
+    return res.status(400).json({ 
+      code: 'token_missing', 
+      msg: 'Signup requires a google OAuth token' 
+    });
   }
-  console.log('verifying token')
+  if (!req.body.nickname || req.body.nickname.length > 20 || req.body.nickname.length < 5) {
+    return res.status(400).json({ 
+      code: 'nickname_invalid', 
+      msg: 'Signup requires a nickname between 5 and 20 characters' 
+    });
+  }
+
   verifyToken(req.body.token).then((payload) => {
     const google_id = payload['sub'];
-    db.users.get_or_create(google_id, req.body.nickname, (err, result) => {
+    db.users.insert(google_id, req.body.nickname, (err, result) => {
       if (err) {
         throw err;
       }
       if (result.rows.length === 1) {
-        req.session.user_uid = result.rows[0].uid
+        req.session.user_uid = result.rows[0].uid;
         res.status(201).json({ nickname: result.rows[0].nickname });
       } else {
-        // Probably shouldn't be possible?
-        res.status(500).json();
+        db.users.get_by_google_id(google_id, (err, result) => {
+          if (err) {
+            throw err;
+          }
+          if (result.rows.length === 1) {
+            req.session.user_uid = result.rows[0].uid;
+            res.status(200).json({ nickname: result.rows[0].nickname });
+          } else {
+            // Conflict must have been with nickname column
+            res.status(400).json({ code: 'nickname_exists' });
+          }
+        });
       }
     });
   }).catch((error) => {
-    console.log(error)
-    res.status(403).json({ error })
+    // TODO: should differentiate between the different errors that could be caught here
+    res.status(400).json({ case: 'token_invalid' });
   });
 };
 

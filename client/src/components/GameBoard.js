@@ -23,6 +23,8 @@ const getSymbol = (content) => {
       return content.color === 'w' ? 'r' : 't';
     case 'p':
       return content.color === 'w' ? 'p' : 'o';
+    default:
+      return content.color === 'w' ? 'p' : 'o';
   }
 };
 
