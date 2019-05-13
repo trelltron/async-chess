@@ -17,7 +17,7 @@ describe('API /api/v1/auth', function() {
 
       utils.getSession()
         .get('/api/v1/auth/me')
-        .expect(401, done)
+        .expect(401, done);
     });
 
     it('should return 200 with details when signed in', function(done) {
@@ -43,8 +43,8 @@ describe('API /api/v1/auth', function() {
             .get('/api/v1/auth/me')
             .expect(200, {
               nickname: 'test'
-            }, done)
-        })
+            }, done);
+        });
     });
   });
 

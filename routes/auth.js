@@ -82,7 +82,7 @@ const post_signup = (req, res) => {
         throw err;
       }
       if (result.rows.length === 1) {
-        req.session.user_uid = result.rows[0].uid
+        req.session.user_uid = result.rows[0].uid;
         res.status(201).json({ nickname: result.rows[0].nickname });
       } else {
         db.users.get_by_google_id(google_id, (err, result) => {
@@ -90,17 +90,18 @@ const post_signup = (req, res) => {
             throw err;
           }
           if (result.rows.length === 1) {
-            req.session.user_uid = result.rows[0].uid
+            req.session.user_uid = result.rows[0].uid;
             res.status(200).json({ nickname: result.rows[0].nickname });
           } else {
             // Conflict must have been with nickname column
-            res.status(400).json({ code: 'nickname_exists' })
+            res.status(400).json({ code: 'nickname_exists' });
           }
         });
       }
     });
   }).catch((error) => {
-    res.status(400).json({ error })
+    // TODO: should differentiate between the different errors that could be caught here
+    res.status(400).json({ case: 'token_invalid' });
   });
 };
 

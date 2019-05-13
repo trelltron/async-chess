@@ -7,4 +7,10 @@
     font-size: 20pt;
     background-color: #f5ce9f;
     border: 5px groove #b8581e;
+    text-align: center;
+}
+
+.signup-form .small-text {
+    font-size: 14px;
+    margin: 5px;
 }
